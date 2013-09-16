@@ -14,6 +14,14 @@
 
 #define HTDU21D_ADDRESS 0x80  // 7-bit I2C address for the sensor
 
+#define TRIGGER_TEMP_MEASURE_HOLD  0xE3
+#define TRIGGER_HUMD_MEASURE_HOLD  0xE5
+#define TRIGGER_TEMP_MEASURE_NOHOLD  0xF3
+#define TRIGGER_HUMD_MEASURE_NOHOLD  0xF5
+#define WRITE_USER_REG  0xE6
+#define READ_USER_REG  0xE7
+#define SOFT_RESET  0xFE
+
 int temperature; //14 bit max
 int humidity; //12 bit max
 
@@ -25,8 +33,8 @@ void setup()
 
 void loop()
 {
-//  temperature = bmp085GetTemperature(bmp085ReadUT());
-//  pressure = bmp085GetPressure(bmp085ReadUP());
+  temperature = htdu21d_readTemp();
+  //humidity = htdu21d_readHumidity();
   Serial.print("Temperature: ");
   Serial.print(temperature, DEC);
   Serial.println(" *0.1 deg C");
@@ -39,27 +47,35 @@ void loop()
 
 
 // Read the uncompensated temperature value
-unsigned int htdu21d_readTemp()
+int htdu21d_readTemp()
 {
-  unsigned int ut;
+  int temperature;
   
-  // Write 0x2E into Register 0xF4
-  // This requests a temperature reading
+  // Request the temperature
   Wire.beginTransmission(HTDU21D_ADDRESS);
-  Wire.write(0xF4);
-  Wire.write(0x2E);
+  Wire.write(TRIGGER_TEMP_MEASURE_NOHOLD);
   Wire.endTransmission();
   
-  // Wait at least 4.5ms
-  delay(5);
+  //Wait for sensor to complete measurement
+  delay(50); //44-50 ms max
+
+  // Comes back in three bytes, data(MSB) / data(LSB) / CRC
+  Wire.requestFrom(HTDU21D_ADDRESS, 3);
+
+  unsigned char msb, lsb;
+  msb = Wire.read();
+  lsb = Wire.read();
   
-  // Read two bytes from registers 0xF6 and 0xF7
-  //ut = bmp085ReadInt(0xF6);
-  return ut;
+  temperature = msb << 8;
+  temperature |= lsb;
+  
+  temperature >>= 2; //Shift right by two to remove the status info bits - don't care
+  
+  return temperature;
 }
 
-// Read the uncompensated humidity value
-unsigned long htdu21d_readHumidity()
+// Read the humidity
+int htdu21d_readHumidity()
 {
   unsigned char msb, lsb, xlsb;
   unsigned long up = 0;

@@ -1,14 +1,14 @@
-BMP085 Breakout
+HTU21D Breakout
 ===============
 
 [![BMP085](https://dlnmh9ip6v2uc.cloudfront.net/images/products/1/1/2/8/2/11282-01a_i_ma.jpg)  
-*BMP085 Breakout Board (SEN-11282)*](https://www.sparkfun.com/products/11282)
+*HTU21D Breakout Board (SEN-?????)*](https://www.sparkfun.com/products/11282)
 
-This is a breadboard friendly breakout board for the EOL'ed Bosch BMP085 high-precision, low-power digital barometer. 
+This is a breadboard friendly breakout board for the Measurement Specialties high-precision, low-power digital humidity sensor.
 
 Repository Contents
 -------------------
-* **/Firmware** - Example ATMega328 code and Arduino code to use with the sensor
+* **/Firmware** - Example Arduino code to use with the sensor
 * **/Hardware** - All Eagle design files (.brd, .sch)
 
 License Information
