@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -7527,26 +7527,26 @@ We've spent an enormous amount of time creating and checking these footprints an
 <wire x1="-1.5" y1="1.5" x2="-1.5" y2="-1.5" width="0.127" layer="51"/>
 <wire x1="1.5" y1="1.5" x2="-1.5" y2="1.5" width="0.127" layer="51"/>
 <wire x1="-1.5" y1="1.5" x2="1.5" y2="1.5" width="0.2032" layer="21"/>
-<smd name="6" x="1.5" y="1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
-<smd name="5" x="1.5" y="0" dx="0.5" dy="0.8" layer="1" rot="R270"/>
-<smd name="4" x="1.5" y="-1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
-<smd name="3" x="-1.5" y="-1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
-<smd name="2" x="-1.5" y="0" dx="0.5" dy="0.8" layer="1" rot="R270"/>
-<smd name="1" x="-1.5" y="1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
+<smd name="NC@6" x="1.5" y="1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
+<smd name="GND" x="1.5" y="0" dx="0.5" dy="0.8" layer="1" rot="R270"/>
+<smd name="DATA" x="1.5" y="-1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
+<smd name="SCK" x="-1.5" y="-1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
+<smd name="VDD" x="-1.5" y="0" dx="0.5" dy="0.8" layer="1" rot="R270"/>
+<smd name="NC@1" x="-1.5" y="1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
 <smd name="7" x="0" y="0" dx="0.2" dy="0.2" layer="1"/>
 <polygon width="0.127" layer="1">
 <vertex x="-0.75" y="1.25"/>
 <vertex x="0.75" y="1.25"/>
-<vertex x="0.75" y="-1.25"/>
-<vertex x="-0.25" y="-1.25"/>
-<vertex x="-0.75" y="-0.75"/>
+<vertex x="0.75" y="-0.75"/>
+<vertex x="0.25" y="-1.25"/>
+<vertex x="-0.75" y="-1.25"/>
 </polygon>
 <polygon width="0.127" layer="31">
-<vertex x="-0.55" y="1.05"/>
-<vertex x="0.55" y="1.05"/>
-<vertex x="0.55" y="-1.05"/>
-<vertex x="-0.25" y="-1.05"/>
-<vertex x="-0.55" y="-0.755"/>
+<vertex x="-0.55" y="1"/>
+<vertex x="0.55" y="1"/>
+<vertex x="0.55" y="-0.55"/>
+<vertex x="0.1" y="-1"/>
+<vertex x="-0.55" y="-1"/>
 </polygon>
 <wire x1="-0.7" y1="-1.5" x2="0.7" y2="-1.5" width="0.2032" layer="21"/>
 <wire x1="-0.5" y1="1.2" x2="0.5" y2="1.2" width="0.127" layer="51"/>
@@ -7579,11 +7579,11 @@ We've spent an enormous amount of time creating and checking these footprints an
 <devices>
 <device name="SMD" package="HTU21D">
 <connects>
-<connect gate="U$1" pin="DATA" pad="3"/>
-<connect gate="U$1" pin="GND@2" pad="2"/>
+<connect gate="U$1" pin="DATA" pad="DATA"/>
+<connect gate="U$1" pin="GND@2" pad="GND"/>
 <connect gate="U$1" pin="GND@7" pad="7"/>
-<connect gate="U$1" pin="SCK" pad="4"/>
-<connect gate="U$1" pin="VDD" pad="5"/>
+<connect gate="U$1" pin="SCK" pad="SCK"/>
+<connect gate="U$1" pin="VDD" pad="VDD"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -8226,9 +8226,11 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="165.1" y1="93.98" x2="167.64" y2="93.98" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<label x="66.04" y="104.14" size="1.778" layer="95" xref="yes"/>
-<pinref part="JP1" gate="G$1" pin="3"/>
-<wire x1="60.96" y1="104.14" x2="66.04" y2="104.14" width="0.1524" layer="91"/>
+<label x="66.04" y="99.06" size="1.778" layer="95" xref="yes"/>
+<pinref part="JP1" gate="G$1" pin="4"/>
+<wire x1="60.96" y1="101.6" x2="63.5" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="101.6" x2="63.5" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="99.06" x2="63.5" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SDA" class="0">
@@ -8242,11 +8244,9 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <junction x="144.78" y="99.06"/>
 </segment>
 <segment>
-<label x="66.04" y="99.06" size="1.778" layer="95" xref="yes"/>
-<wire x1="60.96" y1="101.6" x2="63.5" y2="101.6" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="101.6" x2="63.5" y2="99.06" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="99.06" x2="66.04" y2="99.06" width="0.1524" layer="91"/>
-<pinref part="JP1" gate="G$1" pin="4"/>
+<label x="66.04" y="104.14" size="1.778" layer="95" xref="yes"/>
+<pinref part="JP1" gate="G$1" pin="3"/>
+<wire x1="60.96" y1="104.14" x2="66.04" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="3.3V" class="0">
