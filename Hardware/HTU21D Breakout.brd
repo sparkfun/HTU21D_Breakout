@@ -133,7 +133,7 @@
 <text x="3.01625" y="11.43" size="1.016" layer="21" font="vector" ratio="15">CL</text>
 <text x="5.55625" y="11.43" size="1.016" layer="21" font="vector" ratio="15">DA</text>
 <text x="10.16" y="-15.24" size="1.778" layer="21">N. Seidle</text>
-<text x="9.271" y="0.508" size="1.27" layer="16" ratio="20" rot="MR0">v10</text>
+<text x="9.271" y="0.508" size="1.27" layer="16" ratio="20" rot="MR0">v11</text>
 </plain>
 <libraries>
 <library name="SparkFun">
