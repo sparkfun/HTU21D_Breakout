@@ -12,7 +12,7 @@
 
 #include <Wire.h>
 
-#define HTDU21D_ADDRESS 0x40  // Unshifted 7-bit I2C address for the sensor
+#define HTDU21D_ADDRESS 0x40  //Unshifted 7-bit I2C address for the sensor
 
 #define TRIGGER_TEMP_MEASURE_HOLD  0xE3
 #define TRIGGER_HUMD_MEASURE_HOLD  0xE5
@@ -25,6 +25,10 @@
 float temperature;
 float relativeHumidity;
 
+unsigned int rawHumidity;
+unsigned int rawTemperature;
+byte sensorStatus;
+
 void setup()
 {
   Serial.begin(9600);
@@ -35,42 +39,44 @@ void setup()
 
 void loop()
 {
-  /*  int SigTemp; //Raw 14 bit max reading
-   int SigHumidity; //Raw 12 bit max reading
+   //htdu21d_readTemp();
+   //htdu21d_readHumidity();
    
-   SigTemp = 0x683A;
-   SigHumidity = 0x4E85;
-   //temperature = htdu21d_readTemp();
-   //humidity = htdu21d_readHumidity();
+   //Test cases:
+   //p14 Humidity = 0x7C80 = 54.8% RH
+   //p14 Temp = 0x683A = 24.7 C
+   //p14 Humidity = 0x4E85 = 32.3% RH
+   rawTemperature = 0x683A;
+   rawHumidity = 0x4E85;
    
-   temperature = calc_temp(SigTemp);
-   relativeHumidity = calc_humidity(SigHumidity); //Turn the humidity signal into actual humidity
+   temperature = calc_temp(rawTemperature);
+   relativeHumidity = calc_humidity(rawHumidity); //Turn the humidity signal into actual humidity
    
    Serial.print("Temperature: ");
    Serial.print(temperature, 1);
    Serial.print(" C");
    Serial.print(" Relative Humidity: ");
    Serial.print(relativeHumidity, 1);
-   Serial.print(" %");*/
+   Serial.print(" %");
 
-  //message = 0xDC, result is 0x79
-  //message = 0x683A, result is 0x7C
-  //message = 0x4E85, result is 0x6B
-
-  unsigned int crc = check_crc(0x4E85, 0x6B);
+  int crc;
+  
+  crc = check_crc(0xDC, 0x79);
   Serial.print(" CRC: ");
-  Serial.print(crc);  
+  Serial.print(crc);
+
+  while(1);
 
   Serial.println();
   delay(1000);
 }
 
-// Read the uncompensated temperature value
+//Read the uncompensated temperature value
 int htdu21d_readTemp()
 {
   int temperature;
 
-  // Request the temperature
+  //Request the temperature
   Wire.beginTransmission(HTDU21D_ADDRESS);
   Wire.write(TRIGGER_TEMP_MEASURE_NOHOLD);
   Wire.endTransmission();
@@ -78,10 +84,10 @@ int htdu21d_readTemp()
   //Wait for sensor to complete measurement
   delay(60); //44-50 ms max - we could also poll the sensor
 
-  // Comes back in three bytes, data(MSB) / data(LSB) / CRC
+  //Comes back in three bytes, data(MSB) / data(LSB) / CRC
   Wire.requestFrom(HTDU21D_ADDRESS, 3);
 
-  // Wait for data to become available
+  //Wait for data to become available
   while(Wire.available() < 3) ;
 
   unsigned char msb, lsb, crc;
@@ -97,38 +103,38 @@ int htdu21d_readTemp()
   return temperature;
 }
 
-// Read the humidity
-int htdu21d_readHumidity()
+//Read the humidity
+unsigned int htdu21d_readHumidity()
 {
-  unsigned char msb, lsb, xlsb;
-  unsigned long up = 0;
+  byte msb, lsb, checksum;
 
-  // Write 0x34+(OSS<<6) into register 0xF4
-  // Request a pressure reading w/ oversampling setting
+  //Request a humidity reading
   Wire.beginTransmission(HTDU21D_ADDRESS);
-  Wire.write(0xF4);
-  //Wire.write(0x34 + (OSS<<6));
+  Wire.write(TRIGGER_HUMD_MEASURE_NOHOLD); //Measure humidity with no bus holding
   Wire.endTransmission();
+  
+  //Hang out while measurement is taken. 50mS max, page 4 of datasheet.
+  delay(55);
 
-  // Wait for conversion, delay time dependent on OSS
-  //delay(2 + (3<<OSS));
-
-  // Read register 0xF6 (MSB), 0xF7 (LSB), and 0xF8 (XLSB)
-  Wire.beginTransmission(HTDU21D_ADDRESS);
-  Wire.write(0xF6);
-  Wire.endTransmission();
+  //Read result
   Wire.requestFrom(HTDU21D_ADDRESS, 3);
 
-  // Wait for data to become available
+  //Wait for data to become available
+  int counter = 0;
   while(Wire.available() < 3)
-    ;
+  {
+    counter++;
+    delay(1);
+    if(counter > 100) return 0; //Error out
+  }
+  
   msb = Wire.read();
   lsb = Wire.read();
-  xlsb = Wire.read();
+  checksum = Wire.read();
 
-  up = (((unsigned long) msb << 16) | ((unsigned long) lsb << 8) | (unsigned long) xlsb) >> (8);
-
-  return up;
+  rawHumidity = ((unsigned int) msb << 8) | (unsigned int) lsb;
+  //sensorStatus = rawHumidity & 0x0003; //Grab only the right two bits
+  rawHumidity &= 0xFFFC; //Zero out the status bits but keep them in place
 }
 
 //Given the raw temperature data, calculate the actual temperature
@@ -149,88 +155,79 @@ float calc_humidity(int SigRH)
   return(rh);  
 }
 
-//Give this function the 2 byte message (measurement) and the CRC byte from the HTU21D
+//Read the user register
+byte read_user_register(void)
+{
+  byte userRegister;
+  
+  //Request the user register
+  Wire.beginTransmission(HTDU21D_ADDRESS);
+  Wire.write(READ_USER_REG); //Read the user register
+  Wire.endTransmission();
+  
+  //Read result
+  Wire.requestFrom(HTDU21D_ADDRESS, 1);
+  
+  userRegister = Wire.read();
+
+  return(userRegister);  
+}
+
+//Write to the user register
+//NOTE: We disable all bits except for measurement resolution
+//Bit 7 & 0 = Measurement resolution
+//Bit 6 = Status of battery
+//Bit 5/4/3 = Reserved
+//Bit 2 = Enable on-board heater
+//Bit 1 = Disable OTP reload
+void write_user_register(byte thing_to_write)
+{
+  byte userRegister = read_user_register(); //Go get the current register state
+  userRegister &= 0b01111110; //Turn off the resolution bits
+  thing_to_write &= 0b10000001; //Turn off all other bits but resolution bits
+  userRegister |= thing_to_write; //Mask in the requested resolution bits
+  
+  //Request a write to user register
+  Wire.beginTransmission(HTDU21D_ADDRESS);
+  Wire.write(WRITE_USER_REG); //Write to the user register
+  Wire.write(userRegister); //Write to the data
+  Wire.endTransmission();
+}
+
+//Give this function the 2 byte message (measurement) and the check_value byte from the HTU21D
 //If it returns 0, then the transmission was good
 //If it returns something other than 0, then the communication was corrupted
-
-#define DIVISOR 0x0131 //x^8 + x^5 + x^4 + 1 : http://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks
-//This is the same as the Maxim 1-Wire CRC
+//From: http://www.nongnu.org/avr-libc/user-manual/group__util__crc.html
+//POLYNOMIAL = 0x0131 = x^8 + x^5 + x^4 + 1 : http://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks
+#define SHIFTED_DIVISOR 0x988000 //This is the 0x0131 polynomial shifted to farthest left of three bytes
 
 unsigned int check_crc(uint16_t message_from_sensor, uint8_t check_value_from_sensor)
 {
-  uint8_t result;
-  
-  result = quickTest(0x79, 0xDC);  
-  Serial.print("result: ");
-  Serial.println(result, BIN);
-
-
-//result = quickTest(result, 0x68);  
-  ////Serial.print("result: ");
-  //Serial.println(result, BIN);
-  
-  
-  while(1);
-
   //Test cases from datasheet:
   //message = 0xDC, result is 0x79
   //message = 0x683A, result is 0x7C
   //message = 0x4E85, result is 0x6B
 
-  //From: http://www.nongnu.org/avr-libc/user-manual/group__util__crc.html
-  //More from: http://en.wikipedia.org/wiki/Cyclic_redundancy_check
+  uint32_t remainder = (uint32_t)message_from_sensor << 8; //Pad with 8 bits because we have to add in the result/check value
+  remainder |= check_value_from_sensor; //Add on the check value
 
-  uint32_t message = (uint32_t)message_from_sensor << 8; //Pad with 8 bits because we have to add in the result/check value
-  message |= check_value_from_sensor; //Add on the check value
+  uint32_t divsor = (uint32_t)SHIFTED_DIVISOR;
 
-  uint32_t divser = (uint32_t)DIVISOR;
-
-  //Determine the width of the thing under test
-  int width;
-  for(width = 0 ; (1<<width) < message ; width++) ;
-  width--;
-  Serial.print("width: ");
-  Serial.println(width, DEC);
-
-  //Left align the divser to the three byte test word
-  divser <<= width;
-
-  for ( ; width > 0 ; width--)
+  for (int i = 0 ; i < 16 ; i++) //Operate on only 16 positions of max 24. The remaining 8 are our remainder and should be zero when we're done.
   {
-    Serial.print("message: ");
-    Serial.println(message, BIN);
-    Serial.print("divser:  ");
-    Serial.println(divser, BIN);
-    Serial.println();
+    //Serial.print("remainder:  ");
+    //Serial.println(remainder, BIN);
+    //Serial.print("divsor:     ");
+    //Serial.println(divsor, BIN);
+    //Serial.println();
 
-    if( message & ((uint32_t)1<<(width + 8)) )
-    {
-      //Serial.print("!");
-      message ^= divser;
-    }
+    if( remainder & (uint32_t)1<<(23 - i) ) //Check if there is a one in the left position
+      remainder ^= divsor;
 
-    divser >>= 1;
+    divsor >>= 1; //Rotate the divsor max 16 times so that we have 8 bits left of a remainder
   }
 
-  while(1);
-
-  return message;
-}
-
-uint8_t quickTest(uint8_t crc, uint8_t data)
-{
-  uint8_t i;
-
-  crc = crc ^ data;
-  for (i = 0; i < 8; i++)
-  {
-    if (crc & 0x01)
-      crc = (crc >> 1) ^ 0x8C;
-    else
-      crc >>= 1;
-  }
-
-  return crc;
+  return remainder;
 }
 
 
