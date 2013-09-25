@@ -10,6 +10,12 @@
  Errors 998 if not sensor is detected. Errors 999 is CRC is bad.
  
  Serial.print it out at 9600 baud to serial monitor.
+ 
+ Hardware Connections (Breakoutboard to Arduino):
+ -VCC = 3.3V
+ -SDA = A4 (use inline 10k resistor if your board is 5V)
+ -SCL = A5 (use inline 10k resistor if your board is 5V)
+
  */
 
 #include <Wire.h>
