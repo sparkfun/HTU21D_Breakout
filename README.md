@@ -8,8 +8,9 @@ This is a breadboard friendly breakout board for the Measurement Specialties hig
 
 Repository Contents
 -------------------
-* **/Firmware** - Example Arduino code to use with the sensor
+* **/Library** - Arduino library with example sketch
 * **/Hardware** - All Eagle design files (.brd, .sch)
+* **/Firmware** - Example code if you're not using the library
 
 License Information
 -------------------
