@@ -7,6 +7,11 @@
  
  Get humidity and temperature from the HTU21D sensor.
  
+ Hardware Connections (Breakoutboard to Arduino):
+ -VCC = 3.3V
+ -SDA = A4
+ -SCL = A5
+ 
  Serial.print it out at 9600 baud to serial monitor.
  */
 
@@ -22,11 +27,6 @@
 #define READ_USER_REG  0xE7
 #define SOFT_RESET  0xFE
 
-float temperature;
-float relativeHumidity;
-
-unsigned int rawHumidity;
-unsigned int rawTemperature;
 byte sensorStatus;
 
 void setup()
@@ -39,43 +39,25 @@ void setup()
 
 void loop()
 {
-   //htdu21d_readTemp();
-   //htdu21d_readHumidity();
-   
-   //Test cases:
-   //p14 Humidity = 0x7C80 = 54.8% RH
-   //p14 Temp = 0x683A = 24.7 C
-   //p14 Humidity = 0x4E85 = 32.3% RH
-   rawTemperature = 0x683A;
-   rawHumidity = 0x4E85;
-   
-   temperature = calc_temp(rawTemperature);
-   relativeHumidity = calc_humidity(rawHumidity); //Turn the humidity signal into actual humidity
-   
-   Serial.print("Temperature: ");
-   Serial.print(temperature, 1);
-   Serial.print(" C");
-   Serial.print(" Relative Humidity: ");
-   Serial.print(relativeHumidity, 1);
-   Serial.print(" %");
+  unsigned int rawHumidity = htdu21d_readHumidity();
+  unsigned int rawTemperature = htdu21d_readTemp();
 
-  int crc;
-  
-  crc = check_crc(0xDC, 0x79);
-  Serial.print(" CRC: ");
-  Serial.print(crc);
+  float temperature = calc_temp(rawTemperature);
+  float relativeHumidity = calc_humidity(rawHumidity); //Turn the humidity signal into actual humidity
 
-  while(1);
-
+    Serial.print("Temperature: ");
+  Serial.print(temperature, 1);
+  Serial.print(" C");
+  Serial.print(" Relative Humidity: ");
+  Serial.print(relativeHumidity, 1);
+  Serial.print(" %");
   Serial.println();
   delay(1000);
 }
 
 //Read the uncompensated temperature value
-int htdu21d_readTemp()
+unsigned int htdu21d_readTemp()
 {
-  int temperature;
-
   //Request the temperature
   Wire.beginTransmission(HTDU21D_ADDRESS);
   Wire.write(TRIGGER_TEMP_MEASURE_NOHOLD);
@@ -88,17 +70,21 @@ int htdu21d_readTemp()
   Wire.requestFrom(HTDU21D_ADDRESS, 3);
 
   //Wait for data to become available
-  while(Wire.available() < 3) ;
+  int counter = 0;
+  while(Wire.available() < 3)
+  {
+    counter++;
+    delay(1);
+    if(counter > 100) return 998; //Error out
+  }
 
   unsigned char msb, lsb, crc;
   msb = Wire.read();
   lsb = Wire.read();
   crc = Wire.read(); //We don't do anything with CRC for now
 
-  temperature = msb << 8;
-  temperature |= lsb;
-
-  temperature >>= 2; //Shift right by two to remove the status info bits - don't care
+  unsigned int temperature = ((unsigned int)msb << 8) | lsb;
+  temperature &= 0xFFFC; //Zero out the status bits but keep them in place
 
   return temperature;
 }
@@ -112,7 +98,7 @@ unsigned int htdu21d_readHumidity()
   Wire.beginTransmission(HTDU21D_ADDRESS);
   Wire.write(TRIGGER_HUMD_MEASURE_NOHOLD); //Measure humidity with no bus holding
   Wire.endTransmission();
-  
+
   //Hang out while measurement is taken. 50mS max, page 4 of datasheet.
   delay(55);
 
@@ -127,23 +113,24 @@ unsigned int htdu21d_readHumidity()
     delay(1);
     if(counter > 100) return 0; //Error out
   }
-  
+
   msb = Wire.read();
   lsb = Wire.read();
   checksum = Wire.read();
 
-  rawHumidity = ((unsigned int) msb << 8) | (unsigned int) lsb;
-  //sensorStatus = rawHumidity & 0x0003; //Grab only the right two bits
+  unsigned int rawHumidity = ((unsigned int) msb << 8) | (unsigned int) lsb;
   rawHumidity &= 0xFFFC; //Zero out the status bits but keep them in place
+
+  return(rawHumidity);
 }
 
 //Given the raw temperature data, calculate the actual temperature
 float calc_temp(int SigTemp)
 {
   float tempSigTemp = SigTemp / (float)65536; //2^16 = 65536
-  float rh = -46.85 + (175.72 * tempSigTemp); //From page 14
+  float realTemperature = -46.85 + (175.72 * tempSigTemp); //From page 14
 
-  return(rh);  
+  return(realTemperature);  
 }
 
 //Given the raw humidity data, calculate the actual relative humidity
@@ -159,15 +146,15 @@ float calc_humidity(int SigRH)
 byte read_user_register(void)
 {
   byte userRegister;
-  
+
   //Request the user register
   Wire.beginTransmission(HTDU21D_ADDRESS);
   Wire.write(READ_USER_REG); //Read the user register
   Wire.endTransmission();
-  
+
   //Read result
   Wire.requestFrom(HTDU21D_ADDRESS, 1);
-  
+
   userRegister = Wire.read();
 
   return(userRegister);  
@@ -186,7 +173,7 @@ void write_user_register(byte thing_to_write)
   userRegister &= 0b01111110; //Turn off the resolution bits
   thing_to_write &= 0b10000001; //Turn off all other bits but resolution bits
   userRegister |= thing_to_write; //Mask in the requested resolution bits
-  
+
   //Request a write to user register
   Wire.beginTransmission(HTDU21D_ADDRESS);
   Wire.write(WRITE_USER_REG); //Write to the user register
@@ -229,7 +216,6 @@ unsigned int check_crc(uint16_t message_from_sensor, uint8_t check_value_from_se
 
   return remainder;
 }
-
 
 
 
