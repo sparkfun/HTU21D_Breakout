@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -3682,9 +3682,9 @@ We've spent an enormous amount of time creating and checking these footprints an
 <smd name="1" x="0" y="0" dx="0.635" dy="0.635" layer="1" roundness="100" cream="no"/>
 </package>
 <package name="CREATIVE_COMMONS">
-<text x="-20.32" y="5.08" size="1.778" layer="27">Released under the Creative Commons Attribution Share-Alike 3.0 License</text>
-<text x="0" y="2.54" size="1.778" layer="27">http://creativecommons.org/licenses/by-sa/3.0</text>
-<text x="11.43" y="0" size="1.778" layer="27">Designed by:</text>
+<text x="-20.32" y="5.08" size="1.778" layer="51">Released under the Creative Commons Attribution Share-Alike 3.0 License</text>
+<text x="0" y="2.54" size="1.778" layer="51">http://creativecommons.org/licenses/by-sa/3.0</text>
+<text x="11.43" y="0" size="1.778" layer="51">Designed by:</text>
 </package>
 <package name="OSHW-LOGO-S">
 <polygon width="0.15" layer="21">
@@ -7535,24 +7535,33 @@ We've spent an enormous amount of time creating and checking these footprints an
 <smd name="NC@1" x="-1.5" y="1" dx="0.5" dy="0.8" layer="1" rot="R270"/>
 <smd name="7" x="0" y="0" dx="0.2" dy="0.2" layer="1"/>
 <polygon width="0.127" layer="1">
-<vertex x="-0.75" y="1.25"/>
+<vertex x="-0.7" y="1.25"/>
 <vertex x="0.75" y="1.25"/>
-<vertex x="0.75" y="-0.75"/>
-<vertex x="0.25" y="-1.25"/>
-<vertex x="-0.75" y="-1.25"/>
+<vertex x="0.75" y="-0.8"/>
+<vertex x="0.3" y="-1.25"/>
+<vertex x="-0.7" y="-1.25"/>
 </polygon>
 <polygon width="0.127" layer="31">
-<vertex x="-0.55" y="1"/>
-<vertex x="0.55" y="1"/>
-<vertex x="0.55" y="-0.55"/>
-<vertex x="0.1" y="-1"/>
-<vertex x="-0.55" y="-1"/>
+<vertex x="-0.55" y="1.05"/>
+<vertex x="0.55" y="1.05"/>
+<vertex x="0.55" y="-0.65"/>
+<vertex x="0.1" y="-1.1"/>
+<vertex x="-0.55" y="-1.1"/>
 </polygon>
 <wire x1="-0.7" y1="-1.5" x2="0.7" y2="-1.5" width="0.2032" layer="21"/>
 <wire x1="-0.5" y1="1.2" x2="0.5" y2="1.2" width="0.127" layer="51"/>
 <wire x1="0.5" y1="1.2" x2="0.5" y2="0.5" width="0.127" layer="51"/>
 <wire x1="0.5" y1="0.5" x2="-0.5" y2="0.5" width="0.127" layer="51"/>
 <wire x1="-0.5" y1="0.5" x2="-0.5" y2="1.2" width="0.127" layer="51"/>
+<polygon width="0.127" layer="29">
+<vertex x="-0.775" y="1.325"/>
+<vertex x="-0.775" y="-1.3"/>
+<vertex x="0.375" y="-1.3"/>
+<vertex x="0.825" y="-0.85"/>
+<vertex x="0.825" y="1.325"/>
+</polygon>
+<text x="-1.075" y="1.775" size="0.5" layer="25">&gt;Name</text>
+<text x="-1.325" y="-2.2" size="0.5" layer="27">&gt;Value</text>
 </package>
 </packages>
 <symbols>
@@ -7564,11 +7573,11 @@ We've spent an enormous amount of time creating and checking these footprints an
 <wire x1="7.62" y1="-5.08" x2="-7.62" y2="-5.08" width="0.254" layer="94"/>
 <text x="-7.62" y="5.588" size="1.778" layer="95">&gt;Name</text>
 <text x="-7.62" y="-7.62" size="1.778" layer="95">&gt;Value</text>
-<pin name="SCK" x="10.16" y="0" length="short" direction="in" rot="R180"/>
-<pin name="DATA" x="10.16" y="2.54" length="short" rot="R180"/>
-<pin name="GND@2" x="-10.16" y="0" length="short" direction="pwr"/>
-<pin name="VDD" x="-10.16" y="2.54" length="short" direction="pwr"/>
-<pin name="GND@7" x="-10.16" y="-2.54" length="short" direction="pwr"/>
+<pin name="SCK" x="10.16" y="0" visible="pin" length="short" direction="in" rot="R180"/>
+<pin name="DATA" x="10.16" y="2.54" visible="pin" length="short" rot="R180"/>
+<pin name="GND@2" x="-10.16" y="0" visible="pin" length="short" direction="pwr"/>
+<pin name="VDD" x="-10.16" y="2.54" visible="pin" length="short" direction="pwr"/>
+<pin name="GND@7" x="-10.16" y="-2.54" visible="pin" length="short" direction="pwr"/>
 </symbol>
 </symbols>
 <devicesets>
