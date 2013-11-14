@@ -1,16 +1,18 @@
 HTU21D Breakout
 ===============
 
-[![BMP085](https://dlnmh9ip6v2uc.cloudfront.net/images/products/1/1/2/8/2/11282-01a_i_ma.jpg)  
-*HTU21D Breakout Board (SEN-?????)*](https://www.sparkfun.com/products/11282)
+[![HTU21D Breakout Board](https://dlnmh9ip6v2uc.cloudfront.net/images/products/1/2/0/6/4/12064-04.jpg)  
+*HTU21D Breakout Board (SEN-12064)*](https://www.sparkfun.com/products/12064)
 
 This is a breadboard friendly breakout board for the Measurement Specialties high-precision, low-power digital humidity sensor.
 
 Repository Contents
 -------------------
-* **/Library** - Arduino library with example sketch
-* **/Hardware** - All Eagle design files (.brd, .sch)
-* **/Firmware** - Example code if you're not using the library
+* **/firmware** - Example code if you're not using the library
+* **/fritzing** - Fritzing component for documentation
+* **/hardware** - All Eagle design files (.brd, .sch)
+* **/library** - Arduino library with example sketch
+* **/production files** - A panel containing multiple copies of the layout, used in production. 
 
 License Information
 -------------------

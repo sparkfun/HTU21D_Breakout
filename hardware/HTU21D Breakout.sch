@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.3">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -8163,9 +8163,9 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <plain>
 <rectangle x1="150.876" y1="113.792" x2="153.924" y2="114.808" layer="94"/>
 <text x="187.96" y="7.62" size="2.54" layer="94">N. Seidle</text>
-<text x="165.1" y="116.84" size="1.778" layer="97">CLEAR BOTH SIDES OF SJ1</text>
-<text x="165.1" y="114.3" size="1.778" layer="97">TO DISABLE I2C PULLUP RESISTORS</text>
-<text x="45.72" y="121.92" size="1.778" layer="97">VCC RANGE: 1.5V TO 3.6V</text>
+<text x="165.1" y="114.3" size="1.778" layer="97">Clear both sides of SJ1
+to disable I2C pullup resistors</text>
+<text x="45.72" y="121.92" size="1.778" layer="97">VCC Rage: 1.5V to 3.6V</text>
 <text x="109.22" y="68.58" size="1.778" layer="97">7-bit I2C Address is 0x40</text>
 <text x="109.22" y="66.04" size="1.778" layer="97">I2C write is 0x80</text>
 <text x="109.22" y="63.5" size="1.778" layer="97">I2C read is 0x81</text>
@@ -8301,4 +8301,10 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </sheets>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>
