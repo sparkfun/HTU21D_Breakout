@@ -1,8 +1,8 @@
 HTU21D Breakout
 ===============
 
-[![BMP085](https://dlnmh9ip6v2uc.cloudfront.net/images/products/1/1/2/8/2/11282-01a_i_ma.jpg)  
-*HTU21D Breakout Board (SEN-?????)*](https://www.sparkfun.com/products/11282)
+[![HTU21D](https://dlnmh9ip6v2uc.cloudfront.net/images/products/1/2/0/6/4/12064-01_medium.jpg)  
+*HTU21D Breakout Board (SEN-12064)*](https://www.sparkfun.com/products/12064)
 
 This is a breadboard friendly breakout board for the Measurement Specialties high-precision, low-power digital humidity sensor.
 
