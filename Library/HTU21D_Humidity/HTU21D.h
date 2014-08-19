@@ -34,7 +34,7 @@ public:
   HTU21D();
 
   //Public Functions
-  bool begin();
+  void begin();
   float readHumidity(void);
   float readTemperature(void);
   void setResolution(byte resBits);
