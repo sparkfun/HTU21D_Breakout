@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -8162,16 +8162,17 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <sheet>
 <plain>
 <rectangle x1="150.876" y1="113.792" x2="153.924" y2="114.808" layer="94"/>
-<text x="187.96" y="7.62" size="2.54" layer="94">N. Seidle</text>
-<text x="165.1" y="116.84" size="1.778" layer="97">CLEAR BOTH SIDES OF SJ1</text>
-<text x="165.1" y="114.3" size="1.778" layer="97">TO DISABLE I2C PULLUP RESISTORS</text>
-<text x="45.72" y="121.92" size="1.778" layer="97">VCC RANGE: 1.5V TO 3.6V</text>
+<text x="171.958" y="11.43" size="2.54" layer="94">N. Seidle</text>
+<text x="165.1" y="114.3" size="1.778" layer="97">Clear both sides of SJ1
+to disable I2C pullup resistors</text>
+<text x="45.72" y="121.92" size="1.778" layer="97">VCC Rage: 1.5V to 3.6V</text>
 <text x="109.22" y="68.58" size="1.778" layer="97">7-bit I2C Address is 0x40</text>
 <text x="109.22" y="66.04" size="1.778" layer="97">I2C write is 0x80</text>
 <text x="109.22" y="63.5" size="1.778" layer="97">I2C read is 0x81</text>
+<text x="238.76" y="7.62" size="2.54" layer="94">v12</text>
 </plain>
 <instances>
-<instance part="LOGO1" gate="G$1" x="226.06" y="27.94"/>
+<instance part="LOGO1" gate="G$1" x="231.14" y="17.78"/>
 <instance part="C1" gate="G$1" x="106.68" y="91.44"/>
 <instance part="R1" gate="G$1" x="144.78" y="106.68" rot="R90"/>
 <instance part="R2" gate="G$1" x="160.02" y="106.68" rot="R90"/>
@@ -8183,11 +8184,11 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <attribute name="VALUE" x="150.495" y="111.76" size="1.778" layer="96" rot="R270"/>
 </instance>
 <instance part="GND3" gate="1" x="116.84" y="88.9"/>
-<instance part="STANDOFF2" gate="G$1" x="246.38" y="25.4"/>
-<instance part="STANDOFF1" gate="G$1" x="246.38" y="33.02"/>
-<instance part="JP2" gate="G$1" x="236.22" y="27.94"/>
-<instance part="JP3" gate="G$1" x="220.98" y="30.48"/>
-<instance part="JP4" gate="G$1" x="215.9" y="30.48"/>
+<instance part="STANDOFF2" gate="G$1" x="246.38" y="30.48"/>
+<instance part="STANDOFF1" gate="G$1" x="246.38" y="27.94"/>
+<instance part="JP2" gate="G$1" x="241.3" y="17.78"/>
+<instance part="JP3" gate="G$1" x="241.3" y="30.48"/>
+<instance part="JP4" gate="G$1" x="241.3" y="27.94"/>
 <instance part="P+4" gate="1" x="76.2" y="111.76"/>
 <instance part="GND4" gate="1" x="76.2" y="101.6"/>
 <instance part="U1" gate="U$1" x="129.54" y="96.52"/>
@@ -8301,4 +8302,10 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </sheets>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>

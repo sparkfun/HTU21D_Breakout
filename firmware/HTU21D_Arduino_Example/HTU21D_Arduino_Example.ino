@@ -9,6 +9,7 @@
  
  Hardware Connections (Breakoutboard to Arduino):
  -VCC = 3.3V
+ -GND = GND
  -SDA = A4
  -SCL = A5
  
@@ -45,8 +46,8 @@ void loop()
   float temperature = calc_temp(rawTemperature);
   float relativeHumidity = calc_humidity(rawHumidity); //Turn the humidity signal into actual humidity
 
-    Serial.print("Temperature: ");
-  Serial.print(temperature, 1);
+  Serial.print("Temperature: ");
+  Serial.print(temperature, 1); //Print float with one decimal
   Serial.print(" C");
   Serial.print(" Relative Humidity: ");
   Serial.print(relativeHumidity, 1);
