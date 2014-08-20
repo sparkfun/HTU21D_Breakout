@@ -35,7 +35,7 @@ HTU21D::HTU21D()
 //Begin
 /*******************************************************************************************/
 //Start I2C communication
-bool HTU21D::begin(void)
+void HTU21D::begin(void)
 {
   Wire.begin();
 }
@@ -139,7 +139,7 @@ float HTU21D::readTemperature(void)
 
 	//Given the raw temperature data, calculate the actual temperature
 	float tempTemperature = rawTemperature / (float)65536; //2^16 = 65536
-	float realTemperature = -46.85 + (175.72 * tempTemperature); //From page 14
+	float realTemperature = (float)(-46.85 + (175.72 * tempTemperature)); //From page 14
 
 	return(realTemperature);  
 }
@@ -157,8 +157,8 @@ float HTU21D::readTemperature(void)
 void HTU21D::setResolution(byte resolution)
 {
   byte userRegister = read_user_register(); //Go get the current register state
-  userRegister &= 0b01111110; //Turn off the resolution bits
-  resolution &= 0b10000001; //Turn off all other bits but resolution bits
+  userRegister &= B01111110; //Turn off the resolution bits
+  resolution &= B10000001; //Turn off all other bits but resolution bits
   userRegister |= resolution; //Mask in the requested resolution bits
   
   //Request a write to user register
