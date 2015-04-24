@@ -1,4 +1,4 @@
-SparkFun PRODUCT NAME Libraries
+SparkFun HTU21D Libraries
 =================================
 
 Libraries for use in different environments. 
