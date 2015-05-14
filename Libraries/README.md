@@ -19,8 +19,8 @@ Distributed as-is; no warranty is given.
 
 - Your friends at SparkFun.
 
-BUILD INSTRUCTIONS 
+Update Library Instructions:
+----------------------------
+To get the most up-to-date version of the library, you must run the following git subtree commands. 
 
-$git subtree add -P DIRECTORY NAME --squash git repo URL ref
-
-$git subtree pull -P DIRECTORY NAME --squash git repo URL ref
+$git subtree pull -P Libraries/Arduino --squash https://github.com/sparkfun/SparkFun_HTU21D_Breakout_Arduino_Library.git master

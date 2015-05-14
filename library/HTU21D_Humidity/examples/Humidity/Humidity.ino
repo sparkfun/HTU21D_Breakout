@@ -18,7 +18,7 @@
  */
 
 #include <Wire.h>
-#include "HTU21D.h"
+#include "SparkFunHTU21D.h"
 
 //Create an instance of the object
 HTU21D myHumidity;
