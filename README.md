@@ -2,7 +2,7 @@
 * *[SparkFun Forum](https://forum.sparkfun.com/)*
 * *[Comments Here on GitHub](https://github.com/sparkfun/HTU21D_Breakout/issues)*
 
-**We recommend looking at the [Si7021](https://www.sparkfun.com/products/13763), which is a drop-in replacement for the HTU21D. It uses the same address and methods to read the sensor.*
+*We recommend looking at the [Si7021](https://www.sparkfun.com/products/13763), which is a drop-in replacement for the HTU21D. It uses the same address and methods to read the sensor.*
 
 SparkFun Humidity and Temperature Sensor Breakout - HTU21D
 ===========================================================
